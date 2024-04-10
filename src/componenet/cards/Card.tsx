@@ -15,6 +15,8 @@ interface CardProps {
 const Card = (Props:CardProps) => {
     const [cardHeight,setCardHeight] = React.useState<number>(0)
     const translateY = useSharedValue(0)
+    const previusTranslateY = useSharedValue(0);
+
   const {height: screenHeight} = useWindowDimensions();
 
 
@@ -36,10 +38,15 @@ const Card = (Props:CardProps) => {
         return;
       }
       if (Props.activeCardIndex.value === null) {
+         translateY.value = withTiming(
+           -Props.index * cardHeight * 0.9 + screenHeight * 0.7,
+           {
+             easing: Easing.out(Easing.quad),
+             duration: 500,
+           },
+         );
         // No card selected, move to list view
-        translateY.value = withTiming(
-          clamp(-Props.scrollY.value, -Props.index * cardHeight, 0),
-        );
+       
       } else if (Props.activeCardIndex.value === Props.index) {
         // This card becomes active
         translateY.value = withTiming(-Props.index * cardHeight, {
@@ -62,8 +69,22 @@ const Card = (Props:CardProps) => {
 
 
  const onEnd = (event: GestureStateChangeEvent<TapGestureHandlerEventPayload>) => {
-  Props.activeCardIndex.value = Props.index;
-  console.log("onEnd")
+  console.log(
+    'onEnd',
+    previusTranslateY.value,
+    Props.index,
+    (Props.activeCardIndex.value === Props.index),
+  );
+  // if(previusTranslateY.value === Props.index){
+  //   Props.activeCardIndex.value = previusTranslateY.value
+  // }
+  // previusTranslateY.value = Props.index;
+  if(Props.activeCardIndex.value === Props.index){
+    Props.activeCardIndex.value = null
+  }else{
+    Props.activeCardIndex.value = Props.index;
+  }
+
   // if (Props.activeCardIndex.value === null) {
   //   Props.activeCardIndex.value = Props.index;
   // } else {
