@@ -33,20 +33,26 @@ const Card = (Props:CardProps) => {
   useAnimatedReaction(
     () => Props.activeCardIndex.value,
     (current, pervious) => {
-      console.log(current,pervious)
+      
       if (current === pervious) {
         return;
       }
       if (Props.activeCardIndex.value === null) {
-         translateY.value = withTiming(
-           -Props.index * cardHeight * 0.9 + screenHeight * 0.7,
-           {
-             easing: Easing.out(Easing.quad),
-             duration: 500,
-           },
-         );
+        translateY.value = withTiming(
+          -Props.index * cardHeight * 0.9 + screenHeight * 0.7,
+          {
+            easing: Easing.out(Easing.quad),
+            duration: 500,
+          },
+        );
         // No card selected, move to list view
-       
+        // translateY.value = withTiming(
+        //   clamp(-Props.scrollY.value, -Props.index * cardHeight, 0),
+        //   {
+        //     easing: Easing.out(Easing.quad),
+        //     duration: 500,
+        //   },
+        // );
       } else if (Props.activeCardIndex.value === Props.index) {
         // This card becomes active
         translateY.value = withTiming(-Props.index * cardHeight, {
@@ -54,6 +60,7 @@ const Card = (Props:CardProps) => {
           duration: 500,
         });
       } else {
+        console.log('else');
         // Another card is active, move to the bottom
         translateY.value = withTiming(
           -Props.index * cardHeight * 0.9 + screenHeight * 0.7,
@@ -69,12 +76,7 @@ const Card = (Props:CardProps) => {
 
 
  const onEnd = (event: GestureStateChangeEvent<TapGestureHandlerEventPayload>) => {
-  console.log(
-    'onEnd',
-    previusTranslateY.value,
-    Props.index,
-    (Props.activeCardIndex.value === Props.index),
-  );
+  
   // if(previusTranslateY.value === Props.index){
   //   Props.activeCardIndex.value = previusTranslateY.value
   // }
